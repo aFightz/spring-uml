@@ -1,0 +1,40 @@
+@startuml
+OtherObject -> XmlBeanDefinitionReader:doLoadBeanDefinitions(inputSource,resource)
+activate XmlBeanDefinitionReader
+
+XmlBeanDefinitionReader -> XmlBeanDefinitionReader: doLoadDocument(inputSource,resource)
+activate XmlBeanDefinitionReader
+
+XmlBeanDefinitionReader -> XmlBeanDefinitionReader: getValidationModeForResource(Resource resource)
+activate XmlBeanDefinitionReader
+return validationMode
+
+XmlBeanDefinitionReader -> XmlBeanDefinitionReader: getEntityResolver()
+activate XmlBeanDefinitionReader
+return entityResolver
+
+XmlBeanDefinitionReader -> XmlBeanDefinitionReader: loadDocument(inputSource, entityResolver, errorHandler,validationMode,isNamespaceAware)
+activate XmlBeanDefinitionReader
+return Document doc
+return Document doc
+
+XmlBeanDefinitionReader -> XmlBeanDefinitionReader: registerBeanDefinitions(doc, resource)
+activate XmlBeanDefinitionReader
+
+XmlBeanDefinitionReader -> DefaultBeanDefinitionDocumentReader: registerBeanDefinitions(doc, xmlReaderContext)
+activate DefaultBeanDefinitionDocumentReader
+
+DefaultBeanDefinitionDocumentReader -> DefaultBeanDefinitionDocumentReader: doRegisterBeanDefinitions(root)
+activate DefaultBeanDefinitionDocumentReader
+DefaultBeanDefinitionDocumentReader -> DefaultBeanDefinitionDocumentReader: parseBeanDefinitions(root, delegate)
+activate DefaultBeanDefinitionDocumentReader
+return void
+return void
+
+DefaultBeanDefinitionDocumentReader --> XmlBeanDefinitionReader: num
+deactivate DefaultBeanDefinitionDocumentReader
+deactivate XmlBeanDefinitionReader
+
+return num
+
+@enduml
