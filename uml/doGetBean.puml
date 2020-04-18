@@ -8,7 +8,7 @@ activate AbstractBeanFactory
 
 
     AbstractBeanFactory -> AbstractBeanFactory:getSingleton(beanName)
-    note right:尝试从缓存中加载单例Bean
+    note right:尝试从缓存中加载Bean
     activate AbstractBeanFactory
     return Object sharedInstance
 
