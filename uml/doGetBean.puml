@@ -1,0 +1,81 @@
+@startuml
+OtherObject -> AbstractBeanFactory:doGetBean(name,requiredType,args,typeCheckOnly)
+activate AbstractBeanFactory
+    AbstractBeanFactory -> AbstractBeanFactory:transformedBeanName(name)
+    note right:转换对应 beanName
+    activate AbstractBeanFactory
+    return beanName
+
+
+    AbstractBeanFactory -> AbstractBeanFactory:getSingleton(beanName)
+    note right:尝试从缓存中加载单例Bean
+    activate AbstractBeanFactory
+    return Object sharedInstance
+
+    group sharedInstance != null
+
+        AbstractBeanFactory -> AbstractBeanFactory:getObjectForBeanInstance(sharedInstance, name, beanName, null)
+        note right:返回对应的实例
+        activate AbstractBeanFactory
+        return Object sharedInstance
+
+    else sharedInstance == null
+
+        AbstractBeanFactory -> AbstractBeanFactory:getParentBeanFactory()
+        note right:返回父类工厂，如果存在父类工厂，则递归调用factory.getBean的方法
+        activate AbstractBeanFactory
+        return BeanFactory parentBeanFactory
+
+        AbstractBeanFactory -> AbstractBeanFactory:getMergedLocalBeanDefinition(beanName)
+        note right:
+        activate AbstractBeanFactory
+        return RootBeanDefinition mbd
+
+        group mbd.getDependsOn() != null
+            AbstractBeanFactory -> AbstractBeanFactory:registerDependentBean(dep, beanName)
+            note right:加载依赖
+            activate AbstractBeanFactory
+            return
+        end
+
+        alt mbd.isSingleton()
+            AbstractBeanFactory -> AbstractBeanFactory:getSingleton(String beanName, singletonFactory)
+            note right:加载依赖
+            activate AbstractBeanFactory
+            return Object sharedInstance
+
+            AbstractBeanFactory -> AbstractBeanFactory:getObjectForBeanInstance(sharedInstance, name, beanName, mbd)
+            activate AbstractBeanFactory
+            return Object bean
+
+        else mbd.isPrototype()
+            AbstractBeanFactory -> AbstractBeanFactory:createBean(beanName, mbd, args)
+            note right:加载依赖
+            activate AbstractBeanFactory
+            return Object prototypeInstance
+
+            AbstractBeanFactory -> AbstractBeanFactory:getObjectForBeanInstance(prototypeInstance, name, beanName, mbd)
+            activate AbstractBeanFactory
+            return Object bean
+
+        else other type
+            AbstractBeanFactory -> AbstractBeanFactory:this.scopes.get(mbd.getScope())
+            note right:加载依赖
+            activate AbstractBeanFactory
+            return Scope scope
+
+            AbstractBeanFactory -> Scope:get(String beanName, objectFactory)
+            activate Scope
+            return Object scopedInstance
+
+            AbstractBeanFactory -> AbstractBeanFactory:getObjectForBeanInstance(scopedInstance, name, beanName, mbd)
+            activate AbstractBeanFactory
+            return Object bean
+        end
+
+            AbstractBeanFactory -> AbstractBeanFactory:对bean进行类型转换的操作
+            activate AbstractBeanFactory
+            return T bean
+    end
+return bean
+@enduml

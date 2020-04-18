@@ -5,10 +5,8 @@ import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.core.io.ClassPathResource;
 
 public class SpringTest {
-    /**
-     *
-     */
-    public void test(){
-        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("xxx.xml"));
+    public static void main(String[] args) {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("spring.xml"));
+        bf.getBean(SpringTest.class);
     }
 }

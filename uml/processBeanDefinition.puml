@@ -1,0 +1,9 @@
+@startuml
+OtherObject -> DefaultBeanDefinitionDocumentReader:processBeanDefinition(ele,delegate)
+activate DefaultBeanDefinitionDocumentReader
+    DefaultBeanDefinitionDocumentReader -> BeanDefinitionParserDelegate:parseBeanDefinitionElement(ele)
+    activate BeanDefinitionParserDelegate
+
+    return BeanDefinitionHolder bdHolder
+return void
+@enduml
