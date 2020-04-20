@@ -27,7 +27,7 @@ activate AbstractBeanFactory
         return BeanFactory parentBeanFactory
 
         AbstractBeanFactory -> AbstractBeanFactory:getMergedLocalBeanDefinition(beanName)
-        note right:
+        note right:合并bean的信息
         activate AbstractBeanFactory
         return RootBeanDefinition mbd
 
@@ -40,7 +40,7 @@ activate AbstractBeanFactory
 
         alt mbd.isSingleton()
             AbstractBeanFactory -> AbstractBeanFactory:getSingleton(String beanName, singletonFactory)
-            note right:加载依赖
+            note right:创建单例bean
             activate AbstractBeanFactory
             return Object sharedInstance
 
@@ -50,7 +50,7 @@ activate AbstractBeanFactory
 
         else mbd.isPrototype()
             AbstractBeanFactory -> AbstractBeanFactory:createBean(beanName, mbd, args)
-            note right:加载依赖
+            note right:创建原型bean
             activate AbstractBeanFactory
             return Object prototypeInstance
 
@@ -60,7 +60,7 @@ activate AbstractBeanFactory
 
         else other type
             AbstractBeanFactory -> AbstractBeanFactory:this.scopes.get(mbd.getScope())
-            note right:加载依赖
+            note right:根据自定义的scope加载
             activate AbstractBeanFactory
             return Scope scope
 
