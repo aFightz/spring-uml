@@ -1,0 +1,18 @@
+@startuml
+OtherObject -> AbstractBeanFactory:getObjectForBeanInstance(beanInstance,name,beanName,mbd)
+activate AbstractBeanFactory
+    AbstractBeanFactory -> FactoryBeanRegistrySupport:getObjectFromFactoryBean(factory,beanName,shouldPostProcess)
+    activate FactoryBeanRegistrySupport
+        FactoryBeanRegistrySupport -> FactoryBeanRegistrySupport:doGetObjectFromFactoryBean(factory,beanName)
+        note right:这里执行factory.getObject()
+        activate FactoryBeanRegistrySupport
+            group shouldPostProcess
+                FactoryBeanRegistrySupport -> AbstractAutowireCapableBeanFactory:postProcessObjectFromFactoryBean(object, beanName)
+                note right:后处理器
+                activate AbstractAutowireCapableBeanFactory
+                return bean
+            end
+        return bean
+    return bean
+return bean
+@enduml
