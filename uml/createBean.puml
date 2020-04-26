@@ -1,0 +1,18 @@
+@startuml
+OtherObject -> AbstractAutowireCapableBeanFactory:createBean(beanName, mbd, Object[] args)
+activate AbstractAutowireCapableBeanFactory
+    AbstractAutowireCapableBeanFactory -> AbstractBeanFactory:resolveBeanClass(mbd,beanName,typesToMatch)
+    activate AbstractBeanFactory
+    return Class
+'    deactivate   AbstractBeanFactory
+
+
+    AbstractAutowireCapableBeanFactory -> AbstractBeanDefinition:prepareMethodOverrides()
+    activate AbstractBeanFactory
+    return
+
+    AbstractAutowireCapableBeanFactory -> AbstractAutowireCapableBeanFactory:doCreateBean(beanName,mbd,args)
+    activate AbstractAutowireCapableBeanFactory
+    return bean
+return bean
+@enduml
