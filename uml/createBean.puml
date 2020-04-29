@@ -2,12 +2,19 @@
 OtherObject -> AbstractAutowireCapableBeanFactory:createBean(beanName, mbd, Object[] args)
 activate AbstractAutowireCapableBeanFactory
     AbstractAutowireCapableBeanFactory -> AbstractBeanFactory:resolveBeanClass(mbd,beanName,typesToMatch)
+    note right:获得对应的Class对象
     activate AbstractBeanFactory
     return Class
 '    deactivate   AbstractBeanFactory
 
 
     AbstractAutowireCapableBeanFactory -> AbstractBeanDefinition:prepareMethodOverrides()
+    note right:对override属性进行标记及验证。
+    activate AbstractBeanFactory
+    return
+
+    AbstractAutowireCapableBeanFactory -> AbstractAutowireCapableBeanFactory:resolveBeforeInstantiation(beanName, mbdToUse)
+    note right:实例化前后的处理器
     activate AbstractBeanFactory
     return
 
