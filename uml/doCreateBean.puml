@@ -1,25 +1,33 @@
 @startuml
-OtherObject -> AbstractAutowireCapableBeanFactory:createBean(beanName, mbd, Object[] args)
+OtherObject -> AbstractAutowireCapableBeanFactory:doCreateBean(beanName,mbd,args)
 activate AbstractAutowireCapableBeanFactory
-    AbstractAutowireCapableBeanFactory -> AbstractBeanFactory:resolveBeanClass(mbd,beanName,typesToMatch)
-    note right:获得对应的Class对象
-    activate AbstractBeanFactory
-    return Class
-'    deactivate   AbstractBeanFactory
-
-
-    AbstractAutowireCapableBeanFactory -> AbstractBeanDefinition:prepareMethodOverrides()
-    note right:对override属性进行标记及验证。
-    activate AbstractBeanFactory
-    return
-
-    AbstractAutowireCapableBeanFactory -> AbstractAutowireCapableBeanFactory:resolveBeforeInstantiation(beanName, mbdToUse)
-    note right:实例化前后的处理器
-    activate AbstractBeanFactory
-    return
-
-    AbstractAutowireCapableBeanFactory -> AbstractAutowireCapableBeanFactory:doCreateBean(beanName,mbd,args)
+    AbstractAutowireCapableBeanFactory -> AbstractAutowireCapableBeanFactory:createBeanInstance(beanName, mbd, args)
+    note right:实例化bean，将BeanDefinition转换为BeanWrapper
     activate AbstractAutowireCapableBeanFactory
-    return bean
+    return BeanWrapper
+
+    AbstractAutowireCapableBeanFactory -> AbstractAutowireCapableBeanFactory:applyMergedBeanDefinitionPostProcessors(mbd, beanType, beanName)
+    note right:应用MergedBeanDefinitionPostProcessor
+    activate AbstractAutowireCapableBeanFactory
+    return
+
+
+    group earlySingletonExposure == true
+        AbstractAutowireCapableBeanFactory -> DefaultSingletonBeanRegistry:addSingletonFactory(beanName,singletonFactory)
+        note right:在bean初始化完成前将创建实例的objectFactory加入工厂
+        activate DefaultSingletonBeanRegistry
+        return
+    end
+
+    AbstractAutowireCapableBeanFactory -> AbstractAutowireCapableBeanFactory:populateBean(beanName,mbd,beanWrapper)
+    note right:对bean进行填充，将各个属性值注入
+    activate AbstractAutowireCapableBeanFactory
+    return
+
+    AbstractAutowireCapableBeanFactory -> AbstractAutowireCapableBeanFactory:initializeBean(beanName, exposedObject, mbd)
+    note right:调用初始化方法，比如init-method
+    note left:exposedObject = bean = beanWrapper.getWrappedInstance()
+    activate AbstractAutowireCapableBeanFactory
+    return exposedObject
 return bean
 @enduml
