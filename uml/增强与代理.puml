@@ -1,0 +1,24 @@
+@startuml
+Bean生命周期 -> AbstractAutoProxyCreator:postProcessAfterInitialization(bean,beanName)
+activate AbstractAutoProxyCreator
+    AbstractAutoProxyCreator -> AbstractAutoProxyCreator:wrapIfNecessary()
+    activate AbstractAutoProxyCreator
+
+        AbstractAutoProxyCreator -> AbstractAdvisorAutoProxyCreator:getAdvicesAndAdvisorsForBean()
+        activate AbstractAdvisorAutoProxyCreator
+            AbstractAdvisorAutoProxyCreator -> AbstractAdvisorAutoProxyCreator:findCandidateAdvisors()
+            activate AbstractAdvisorAutoProxyCreator
+            return candidateAdvisors
+
+            AbstractAdvisorAutoProxyCreator -> AbstractAdvisorAutoProxyCreator:findAdvisorsThatCanApply(candidateAdvisors)
+            activate AbstractAdvisorAutoProxyCreator
+            return eligibleAdvisors
+        return specificInterceptors
+
+        AbstractAutoProxyCreator -> AbstractAutoProxyCreator:createProxy(bean,specificInterceptors)
+        activate AbstractAutoProxyCreator
+        return proxy
+
+    return bean
+return bean
+@enduml
